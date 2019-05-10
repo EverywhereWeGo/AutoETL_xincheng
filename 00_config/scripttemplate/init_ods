@@ -1,0 +1,5 @@
+INSERT OVERWRITE table {ODS}.{ods_tablename}
+SELECT
+{fileds}
+'${TX_DATE}'
+FROM {SRC}.{src_tablename};

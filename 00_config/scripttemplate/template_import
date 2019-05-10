@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<export>
+  <head>
+    <type>ideScriptExport</type>
+    <time>1557213552937</time>
+    <version>V1.0</version>
+    <projectCode>wangchong</projectCode>
+  </head>
+  <body>
+    <files>
+      {0}
+    </files>
+  </body>
+</export>
