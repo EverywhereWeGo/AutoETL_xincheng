@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/autoload.iml" filepath="$PROJECT_DIR$/.idea/autoload.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AutoETL.iml" filepath="$PROJECT_DIR$/.idea/AutoETL.iml" />
     </modules>
   </component>
 </project>

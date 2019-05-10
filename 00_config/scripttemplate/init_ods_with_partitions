@@ -1,6 +1,0 @@
-insert OVERWRITE table ods.ODS_TB_O_DG partition(PT)
-SELECT
-{fileds}
-'${TX_DATE}'
-FROM src.SRC_TB_O_DG
-DISTRIBUTE BY to_date(C_S_DATE);
