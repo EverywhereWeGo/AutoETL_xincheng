@@ -16,30 +16,37 @@ def open_excel():
     sh_cfg = work_book.sheet_by_name("load_cfg")
     nrows_cfg = sh_cfg.nrows
     for i in range(1, nrows_cfg):
-        # 判断目标表链接条件
+        srctablename = sh_cfg.cell_value(i, 1) + "." + sh_cfg.cell_value(i, 2)
+        destablename = sh_cfg.cell_value(i, 4) + "." + sh_cfg.cell_value(i, 5)
+        # 全量
         sqoop_template = """sqoop import  -D mapreduce.job.queuename=hadoop01 -D mapreduce.job.name={mjn} \\\n""" \
-                         """--connect  '%%s' \\\n""" \
-                         """--username %%s \\\n""" \
-                         """--password '%%s' \\\n""" \
+                         """--connect  '%s' \\\n""" \
+                         """--username %s \\\n""" \
+                         """--password '%s' \\\n""" \
                          """--table '{srctablename}' \\\n""" \
                          """--hive-import \\\n""" \
                          """--hive-table {destablename} \\\n""" \
                          """--delete-target-dir \\\n""" \
                          """--hive-overwrite  -m 1 \\\n""" \
                          """--fetch-size 1000 \\\n""" \
-                         """-- --schema 'JUPITER'""" \
+                         """-- --schema '{schema}' \\\n""" \
+                         """--null-string '' \\\n""" \
+                         """--null-non-string '' \\\n""" \
+                         """--hive-drop-import-delims\\\n""" \
                          """\"\"\"""" \
-                         """%%(connect,username,password)"""
-        sqoop_cmd = sqoop_template.replace("{mjn}", sh_cfg.cell_value(i, 3)). \
-            replace("{srctablename}", sh_cfg.cell_value(i, 1)). \
-            replace("{destablename}", sh_cfg.cell_value(i, 3))
-        record_py_file(sh_cfg.cell_value(i, 3).replace(".", "_").lower() + "_init", sqoop_env + sqoop_cmd)
+                         """%(connect,username,password)"""
+        sqoop_cmd = sqoop_template.replace("{mjn}", srctablename). \
+            replace("{srctablename}", srctablename). \
+            replace("{destablename}", destablename). \
+            replace("{schema}", sh_cfg.cell_value(i, 1))
+
+        record_py_file(destablename.replace(".", "_").lower() + "init", sqoop_env + sqoop_cmd)
 
 
 # 生成py文件
 def record_py_file(file_name, sqoop_cmd):
     # 读取模板文件
-    template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\src_load_file"
+    template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\01_src\src_load_file"
     file_read = codecs.open(template_file, 'r', 'utf-8')
     # 指定文件生成路径
     des_file = r"C:\Users\Administrator\Desktop\INIT\SRC\%s.py" % (file_name)

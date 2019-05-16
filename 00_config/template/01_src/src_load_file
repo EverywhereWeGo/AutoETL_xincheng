@@ -10,10 +10,10 @@ import ConfigParser
 #执行导入命令
 def sqoop_test(excute_date):
     config = ConfigParser.RawConfigParser()
-    config.read(r"/opt/bdos/bdos-runner-server/bdms/task_scripts/wcproject/wy_oracle.sh")
-    connect = config.get('oracle1', 'connect')
-    username = config.get('oracle1', 'username')
-    password = config.get('oracle1', 'password')
+    config.read(r"/opt/bdos/bdos-runner-server/bdms/task_scripts/wangchong/wy_oracle.sh")
+    connect = config.get('{section}', 'connect')
+    username = config.get('{section}', 'username')
+    password = config.get('{section}', 'password')
 
     sqoop_cmd = """
 {0}

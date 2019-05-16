@@ -70,15 +70,8 @@ def open_excel_without_partitions(excel_schema_name, excel_tab_name):
 
 # 读取模板文件
 def read_template_file(template_file):
-    template_str = ""
-    file_read = codecs.open(template_file, 'r', 'utf-8')
-    while (1):
-        line = file_read.readline()
-        if line:
-            template_str = template_str + line
-        else:
-            break
-    file_read.close()
+    with open(template_file, 'r') as f:
+        template_str = f.read()
     return template_str
 
 
