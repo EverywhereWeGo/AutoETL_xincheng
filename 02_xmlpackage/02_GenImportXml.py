@@ -48,18 +48,31 @@ def record_py_file(strin):
     template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\xml_import"
     with open(template_file, 'r') as f:
         file_read = f.read()
-    str = file_read.replace("{0}", strin)
+    stri = file_read.replace("{0}", strin)
 
     file_name = "b82c2f2f309e4a4b962f858163dee4af.xml"
     des_file = r"C:\Users\Administrator\Desktop\XML\%s" % (file_name)
     file_write = codecs.open(des_file, 'w', 'utf-8')
-    file_write.writelines(str)
+    file_write.writelines(stri)
     file_write.close()
+
+
+# 删除文件夹下所有文件
+def del_file(del_path):
+    ls = os.listdir(del_path)
+    for i in ls:
+        c_path = os.path.join(del_path, i)
+        if os.path.isdir(c_path):
+            del_file(c_path)
+        else:
+            os.remove(c_path)
 
 
 # 主程序
 if __name__ == '__main__':
     path = unicode("C:\Users\Administrator\Desktop\GEN", 'utf-8')
+
+    del_file(r"C:\Users\Administrator\Desktop\XML")
 
     scriptsname = get_filelist(path)
     xml_str = gen_job_xml(scriptsname, path)

@@ -1,8 +1,0 @@
-export HADOOP_OPTS=" -DHADOOP_USER_NAME=wangchong"
-export BDOS_SQOOP_HIVE_IP="manage-node1:2181,manage-node2:2181,manage-node3:2181"
-export BDOS_SQOOP_HIVE_PORT=""
-export BDOS_SQOOP_HIVE_NAMESPACE="test01"
-export BDOS_SQOOP_HIVE_PARAM=";serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2"
-export BDOS_SQOOP_HIVE_USERNAME="wangchong"
-export BDOS_SQOOP_HIVE_PWD=""
-

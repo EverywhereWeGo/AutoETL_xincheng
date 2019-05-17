@@ -77,7 +77,7 @@ def read_template_file(template_file):
 
 # 获取"建表列表"sheet页
 def get_create_tab_list():
-    sheet = work_book.sheet_by_name("建表列表")
+    sheet = work_book.sheet_by_name("All_Table_Info")
     nrows_crt_tab = sheet.nrows
     ncols_crt_tab = sheet.ncols
     # 创建二维数组
@@ -90,8 +90,9 @@ def get_create_tab_list():
 
 
 if __name__ == '__main__':
-    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\ods.xlsx")
+    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\ods_ydac.xlsx")
     crt_tab_list_arr = get_create_tab_list()
+    print crt_tab_list_arr
     all_str = ""
     for i in range(0, len(crt_tab_list_arr)):
         if (crt_tab_list_arr[i][2] == "Y"):
@@ -99,6 +100,6 @@ if __name__ == '__main__':
         else:
             all_str = open_excel_without_partitions(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1])
 
-        des_file = r"C:\Users\Administrator\Desktop\DAILY\ODS\%s.hql" % (crt_tab_list_arr[i][1].lower())
+        des_file = r"C:\Users\Administrator\Desktop\GEN\DAILY\02ODS\%s.hql" % (crt_tab_list_arr[i][1].lower())
         file_write = codecs.open(des_file, 'w', 'utf-8')
         file_write.writelines(all_str)
