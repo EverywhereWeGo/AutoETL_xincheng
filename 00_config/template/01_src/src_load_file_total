@@ -1,0 +1,64 @@
+# -*- coding:utf-8 -*-
+#!/usr/bin/python
+
+
+import os
+import sys
+import datetime
+import ConfigParser
+
+#执行导入命令
+def sqoop_test(excute_date):
+    config = ConfigParser.RawConfigParser()
+    config.read(r"/opt/bdos/bdos-runner-server/bdms/task_scripts/futureland/dbconfig.sh")
+    connect = config.get('{section}', 'connect')
+    username = config.get('{section}', 'username')
+    password = config.get('{section}', 'password')
+
+    sqoop_cmd = """
+export HADOOP_OPTS=" -DHADOOP_USER_NAME=wangchong"
+export BDOS_SQOOP_HIVE_IP="manage-node1:2181,manage-node2:2181,manage-node3:2181"
+export BDOS_SQOOP_HIVE_PORT=""
+export BDOS_SQOOP_HIVE_NAMESPACE="test01"
+export BDOS_SQOOP_HIVE_PARAM=";serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2"
+export BDOS_SQOOP_HIVE_USERNAME="wangchong"
+export BDOS_SQOOP_HIVE_PWD=""
+
+sqoop import  -D mapreduce.job.queuename=hadoop01 -D mapreduce.job.name={mjn}  \
+--connect  '%s' \
+--username %s \
+--password '%s' \
+{--driver}
+--table '{srctablename}' \
+--hive-import \
+--hive-table {destablename} \
+--delete-target-dir \
+--hive-overwrite  -m 1 \
+--fetch-size 1000 \
+-- --schema '{schema}' \
+--null-string '' \
+--null-non-string '' \
+--hive-drop-import-delims \
+--fields-terminated-by '\\0x7F' \
+"""%(connect,username,password)
+    ret = os.system(sqoop_cmd)
+    return ret
+
+#主程序
+try:
+    if __name__ == '__main__':
+        if( len(sys.argv) > 1 ):
+            TX_DATE = sys.argv[1]
+        else:
+            today = datetime.date.today()
+            TX_DATE = today - datetime.timedelta(days=1)
+        ret = sqoop_test(TX_DATE)
+        if( ret == 0 ):
+            print("The sqoop job %s is complete")%(sys.argv[0])
+            sys.exit(0)
+        else:
+            print("The sqoop job %s has failed")%(sys.argv[0])
+            sys.exit(1)
+except Exception as e:
+    print(Exception,":",e)
+    sys.exit(1)

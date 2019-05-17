@@ -1,0 +1,16 @@
+sqoop import  -D mapreduce.job.queuename=hadoop01 -D mapreduce.job.name={mjn}  \
+--connect  '%s' \
+--username %s \
+--password '%s' \\
+--table '{srctablename}' \
+--hive-import \
+--hive-table {destablename} \
+--delete-target-dir \
+--hive-overwrite  -m 1 \
+--fetch-size 1000 \
+-- --schema '{schema}' \
+--null-string '' \
+--null-non-string '' \
+--hive-drop-import-delims \
+--fields-terminated-by '\\0x7F' \
+"""%(connect,username,password)

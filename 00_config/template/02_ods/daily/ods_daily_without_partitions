@@ -1,0 +1,22 @@
+/*支持重跑*/
+DROP TABLE IF EXISTS {ODS}.{ods_tablename}_temp;
+CREATE TABLE {ODS}.{ods_tablename}_temp LIKE {ODS}.{ods_tablename};
+
+/*找到所有未被修改的数据放入临时表*/
+INSERT INTO {ODS}.{ods_tablename}_temp
+SELECT
+T1.*
+FROM {ODS}.{ods_tablename} T1
+LEFT JOIN {SRC}.{src_tablename} T2
+ON T1.{keyid} = T2.{keyid}
+WHERE T1.ETL_LAD_DTE<'${TX_DATE}' AND T2.{keyid} is null;
+
+/*增量数据 */
+INSERT INTO {ODS}.{ods_tablename}_temp
+SELECT
+{fileds}
+'${TX_DATE}'
+FROM {SRC}.{src_tablename};
+
+DROP TABLE {ODS}.{ods_tablename};
+ALTER TABLE {ODS}.{ods_tablename}_temp RENAME TO {ODS}.{ods_tablename};

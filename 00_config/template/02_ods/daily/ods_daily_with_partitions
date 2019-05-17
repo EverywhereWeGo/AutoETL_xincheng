@@ -1,0 +1,11 @@
+/*支持重跑*/
+
+ALTER TABLE {ODS}.{ods_tablename} DROP IF EXISTS PARTITION(PT='${TX_DATE}')
+
+/*增量数据 */
+INSERT INTO {ODS}.{ods_tablename} PARTITION (PT='${TX_DATE}')
+SELECT
+{fileds}
+'${TX_DATE}'
+FROM {SRC}.{src_tablename};
+
