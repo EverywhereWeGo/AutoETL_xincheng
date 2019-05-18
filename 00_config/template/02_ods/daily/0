@@ -1,0 +1,6 @@
+TRUNCATE table {ODS}.{ods_tablename};
+INSERT INTO ODS.ODS_TB_O_DG
+SELECT
+{fileds}
+'${TX_DATE}'
+FROM {SRC}.{src_tablename};
