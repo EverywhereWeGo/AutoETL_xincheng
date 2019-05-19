@@ -1,5 +1,5 @@
-TRUNCATE table {ODS}.{ods_tablename}
+TRUNCATE table {ODS}.{ods_tablename};
 SELECT
-{fileds}
+{fileds},
 '${TX_DATE}'
 FROM {SRC}.{src_tablename};

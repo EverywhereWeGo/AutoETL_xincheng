@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn" id="review-definitions" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20">
+      <process id="xcy_xc_cwy" name="物业---新橙社用户cwy---全量接入---初始化">
+             <sequenceFlow sourceRef="U95CF58CB" targetRef="UDE9F709F" id="U7CF9AEDC" name="线段_1"/>
+             <sequenceFlow sourceRef="UDE9F709F" targetRef="U6096BD4D" id="U1CDD300D" name="线段_2"/>
+
+
+           <startEvent id="U95CF58CB" name="开始节点"/>
+            <serviceTask id="UDE9F709F" name="xc_cwy_src_c_workorder_init">
+              <extensionElements>
+                 <activiti:field name="type">
+                   <activiti:expression>IDEScript</activiti:expression>
+                 </activiti:field>
+                 <activiti:field name="params">
+                   <activiti:expression>{"id":"UDE9F709F","name":"xc_cwy_src_c_workorder_init","remark":"","scriptTypeId":2,"projectId":"seazen_label","taskId":"4de9f709fda0397592c7a42946b6d143","nodeErrorRepeatTimes":"1","scriptPara":"${TX_DATE}","repeatInterval":0,"repeatUnit":"s","scriptParaAc":[],"resultName":"","resultInfo":"","hasSave":true,"validateStr":""}</activiti:expression>
+                 </activiti:field>
+                 <activiti:field name="remark">
+                   <activiti:expression/>
+                 </activiti:field>
+                 <activiti:field name="message">
+                   <activiti:expression/>
+                 </activiti:field>
+              </extensionElements>
+            </serviceTask>
+            <serviceTask id="U6096BD4D" name="xc_cwy_src_t_sys_public_block_init">
+              <extensionElements>
+                 <activiti:field name="type">
+                   <activiti:expression>IDEScript</activiti:expression>
+                 </activiti:field>
+                 <activiti:field name="params">
+                   <activiti:expression>{"id":"U6096BD4D","name":"xc_cwy_src_t_sys_public_block_init","remark":"","scriptTypeId":2,"projectId":"seazen_label","taskId":"a6096bd4d4cd39f5a6627f8b79ea89ae","nodeErrorRepeatTimes":"1","scriptPara":"${TX_DATE}","repeatInterval":0,"repeatUnit":"s","scriptParaAc":[],"resultName":"","resultInfo":"","hasSave":true,"validateStr":""}</activiti:expression>
+                 </activiti:field>
+                 <activiti:field name="remark">
+                   <activiti:expression/>
+                 </activiti:field>
+                 <activiti:field name="message">
+                   <activiti:expression/>
+                 </activiti:field>
+              </extensionElements>
+            </serviceTask>
+           </process>
+        <bpmndi:BPMNDiagram id="BPMNDiagram_xcy_xc_cwy">
+          <bpmndi:BPMNPlane id="BPMNPlane_xcy_xc_cwy" bpmnElement="xcy_xc_cwy">
+           <bpmndi:BPMNShape id="BPMNShape_Canvas" bpmnElement="BPMNShape_Canvas">
+                <omgdc:Bounds width="300" height="300" x="-80" y="-120"/>
+           </bpmndi:BPMNShape>
+        <bpmndi:BPMNShape id="BPMNShape_U95CF58CB" bpmnElement="U95CF58CB">
+                <omgdc:Bounds height="300" width="300" x="200" y="200"/>
+         </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_UDE9F709F" bpmnElement="UDE9F709F">
+        <omgdc:Bounds height="30" width="30" x="280" y="280"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_U6096BD4D" bpmnElement="U6096BD4D">
+        <omgdc:Bounds height="30" width="30" x="360" y="360"/>
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

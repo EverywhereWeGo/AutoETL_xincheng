@@ -14,7 +14,7 @@ WHERE T1.ETL_LAD_DTE<'${TX_DATE}' AND T2.{keyid} is null;
 --增量数据
 INSERT INTO {ODS}.{ods_tablename}_temp
 SELECT
-{fileds}
+{fileds},
 '${TX_DATE}'
 FROM {SRC}.{src_tablename};
 

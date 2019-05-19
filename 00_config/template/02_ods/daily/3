@@ -9,7 +9,7 @@ drop table if exists {ODS}.{ODSTABLE}_tmp1;
 create table {ODS}.{ODSTABLE}_tmp1 as
 select
 {KEYID},
-src_demo.checkmd5({fileds}) as con_str
+p1_property_ods.data_check({fileds}) as con_str
 from {SRC}.{SRCTABLE};
 
 
@@ -46,7 +46,7 @@ where t2.{KEYID} is null;
 
 --插入新增和修改数据;
 insert into {ODS}.{ODSTABLE}_tmp4
-select t2.*,'','2018-02-01'
+select t2.*,p1_property_ods.data_check({fileds}) as con_str,'${TX_DATE}'
 from {ODS}.{ODSTABLE}_tmp2 t1
 join {SRC}.{SRCTABLE} t2
 on t1.{KEYID} = t2.{KEYID};    --主键

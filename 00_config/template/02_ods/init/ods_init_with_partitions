@@ -3,9 +3,9 @@ set hive.exec.dynamic.partition.mode=nonstrict;
 set hive.exec.max.dynamic.partitions.pernode=100000;
 set hive.exec.max.dynamic.partitions=100000;
 
-INSERT OVERWRITE table {ODS}.{ods_tablename} partition(PT)
+INSERT OVERWRITE table {ODS}.{ods_tablename} partition(ETL_LAD_DAY)
 SELECT
-{fileds}
-to_date({dateflag})
+{fileds},
+nvl(to_date({dateflag}),'1999-01-01')
 FROM {SRC}.{src_tablename}
 DISTRIBUTE BY to_date({dateflag});

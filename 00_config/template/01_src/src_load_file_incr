@@ -29,7 +29,9 @@ sqoop import  -D mapreduce.job.queuename=hadoop01 -D mapreduce.job.name={mjn} \
 --username %s \
 --password '%s' \
 {--driver}
---query "select * from {srctablename} where {dbfunction} AND \$CONDITIONS" \
+--query "select
+{fileds}
+from {srctablename} where {dbfunction} AND \$CONDITIONS" \
 --target-dir 'sqoop-sql-import/wangchongnew.sql_{timestamp}' \
 --hive-import \
 --hive-table {destablename} \
@@ -40,7 +42,7 @@ sqoop import  -D mapreduce.job.queuename=hadoop01 -D mapreduce.job.name={mjn} \
 --null-non-string '' \
 --hive-drop-import-delims \
 --fields-terminated-by '\\0x7F' \
-"""%(connect,username,password,excute_date)
+"""%{arguments}
     ret = os.system(sqoop_cmd)
     return ret
 

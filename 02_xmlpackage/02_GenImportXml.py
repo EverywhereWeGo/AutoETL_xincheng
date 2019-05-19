@@ -10,6 +10,7 @@ import uuid
 import os
 import codecs
 import shutil
+import zipfile
 
 
 # 获取指定文件夹下所有脚本名称
@@ -24,7 +25,9 @@ def get_filelist(pa):
 def gen_job_xml(files, pa):
     xmls = ""
     for filenames in files:
+        # 复制文件
         shutil.copy(filenames, "C:\Users\Administrator\Desktop\XML")
+        shutil.copy(filenames, os.getcwd())
         filename = filenames[filenames.rindex("\\") + 1:]
         pat = filenames[len(pa):filenames.rindex("\\")].replace("\\", "/")
         code = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(filename))).replace("-", '')
@@ -42,7 +45,7 @@ def gen_job_xml(files, pa):
     return xmls
 
 
-# 生成py文件
+# 生成xml文件
 def record_py_file(strin):
     # 读取模板文件
     template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\xml_import"
@@ -55,6 +58,24 @@ def record_py_file(strin):
     file_write = codecs.open(des_file, 'w', 'utf-8')
     file_write.writelines(stri)
     file_write.close()
+
+
+# 生成zip包
+def gen_zip():
+    os.remove(r'C:\Users\Administrator\Desktop\new.zip')
+    newZip = zipfile.ZipFile(r'C:\Users\Administrator\Desktop\new.zip', 'a')
+
+    files = get_filelist("C:\Users\Administrator\Desktop\XML")
+    for filenames in files:
+        shutil.copy(filenames, os.getcwd())
+
+    files = get_filelist(os.getcwd())
+    for filenames in files:
+        if (filenames != r"C:\Users\Administrator\Desktop\AutoETL\02_xmlpackage\02_GenImportXml.py"):
+            newZip.write(filenames.replace("C:\\Users\\Administrator\\Desktop\\AutoETL\\02_xmlpackage\\", ""),
+                         compress_type=zipfile.ZIP_DEFLATED)
+            os.remove(filenames)
+    newZip.close()
 
 
 # 删除文件夹下所有文件
@@ -73,7 +94,7 @@ if __name__ == '__main__':
     path = unicode("C:\Users\Administrator\Desktop\GEN", 'utf-8')
 
     del_file(r"C:\Users\Administrator\Desktop\XML")
-
     scriptsname = get_filelist(path)
     xml_str = gen_job_xml(scriptsname, path)
     record_py_file(xml_str)
+    gen_zip()

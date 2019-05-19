@@ -24,7 +24,7 @@ def open_excel_0(excel_schema_name, excel_tab_name):
             fileds = fileds + cols_info.cell_value(i, 3) + ",\n"
             ODS = cols_info.cell_value(i, 5)
             ODSTABLE = cols_info.cell_value(i, 6)
-    fileds = fileds.rstrip("\n")
+    fileds = fileds.rstrip(",\n")
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\daily\0")
@@ -57,7 +57,7 @@ def open_excel_1(excel_schema_name, excel_tab_name):
             ODSTABLE = cols_info.cell_value(i, 6)
             if (cols_info.cell_value(i, 8) == "Y"):
                 keyid = cols_info.cell_value(i, 3)
-    fileds = fileds.rstrip("\n")
+    fileds = fileds.rstrip(",\n")
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\daily\1")
@@ -88,7 +88,7 @@ def open_excel_2(excel_schema_name, excel_tab_name):
             src_tablename = cols_info.cell_value(i, 1)
             ODS = cols_info.cell_value(i, 5)
             ODSTABLE = cols_info.cell_value(i, 6)
-    fileds = fileds.rstrip("\n")
+    fileds = fileds.rstrip(",\n")
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\daily\2")
@@ -122,7 +122,7 @@ def open_excel_3(excel_schema_name, excel_tab_name):
             ODSTABLE = cols_info.cell_value(i, 6)
             if (cols_info.cell_value(i, 8) == "Y"):
                 keyid = cols_info.cell_value(i, 3)
-    fileds = fileds.rstrip("\n")
+    fileds = fileds.rstrip(",\n")
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\daily\3")

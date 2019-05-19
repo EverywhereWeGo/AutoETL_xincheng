@@ -27,7 +27,7 @@ def init_ods_with_partiton(excel_schema_name, excel_tab_name):
             SRC = cols_info.cell_value(i, 0)
             src_tablename = cols_info.cell_value(i, 1)
 
-    select_str = select_str.rstrip("\n")
+    select_str = select_str.rstrip(",\n")
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\init\ods_init_with_partitions")
@@ -51,7 +51,7 @@ def init_ods_without_partition(excel_schema_name, excel_tab_name):
     for i in range(0, cols_nrows):
         if (cols_info.cell_value(i, 6) == excel_tab_name):
             select_str = select_str + cols_info.cell_value(i, 3) + ",\n"
-    select_str = select_str.rstrip("\n")
+    select_str = select_str.rstrip(",\n")
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\init\ods_init_without_partition")
