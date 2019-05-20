@@ -11,11 +11,11 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
+
 # 生成线段连接及图表
 def gen_line():
-    sheet_name_cfg = u"依赖关系设置"
     # 打开导入配置excel，获取详细导入配置
-    sh_cfg = work_book.sheet_by_name(sheet_name_cfg)
+    sh_cfg = work_book.sheet_by_name("workflow_info")
     nrows_cfg = sh_cfg.nrows
 
     work_flowCode = sh_cfg.cell_value(1, 0)
@@ -23,10 +23,10 @@ def gen_line():
 
     # 初始化数据导入
     sequenceFlow = '''<?xml version='1.0' encoding='UTF-8'?>\n<definitions id="review-definitions" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn">\n      <process id="%s" name="%s">\n''' % (
-    work_flowCode, work_flowName)
+        work_flowCode, work_flowName)
     bpmndi = '''        <bpmndi:BPMNDiagram id="BPMNDiagram_%s">\n          <bpmndi:BPMNPlane id="BPMNPlane_%s" bpmnElement="%s">\n           <bpmndi:BPMNShape id="BPMNShape_Canvas" bpmnElement="BPMNShape_Canvas">
                 <omgdc:Bounds width="300" height="300" x="-80" y="-120"/>\n           </bpmndi:BPMNShape>\n''' % (
-    work_flowCode, work_flowCode, work_flowCode)
+        work_flowCode, work_flowCode, work_flowCode)
 
     # 增量数据导入
     # sequenceFlow = '''<definitions id="review-definitions" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn">\n
@@ -51,7 +51,7 @@ def gen_line():
 
 # 生成线段连接及图表
 def gen_job():
-    sheet_name_cfg = "作业属性设置"
+    sheet_name_cfg = "workflow_list"
     # 打开导入配置excel，获取详细导入配置
     sh_cfg = work_book.sheet_by_name(sheet_name_cfg)
     nrows_cfg = sh_cfg.nrows
@@ -86,9 +86,9 @@ def gen_job():
             elif (job_scripttype == 'KHAN'):
                 job_scripttypeid = 11
             elif (job_scripttype == 'HIVE'):
-                job_scripttypeid = 1
+                job_scripttypeid = 3
             elif (job_scripttype == 'SHELL'):
-                job_scripttypeid = 0
+                job_scripttypeid = 1
             job_projectid = sh_cfg.cell_value(i, 4)
             job_nodeErrorRepeatTimes = int(sh_cfg.cell_value(i, 8))
             job_scriptPara = sh_cfg.cell_value(i, 9)
@@ -110,8 +110,8 @@ def gen_job():
                  </activiti:field>
               </extensionElements>
             </serviceTask>\n''' % (
-            job_id, job_name, job_type, job_id, job_name, job_scripttypeid, job_projectid, job_taskid,
-            job_nodeErrorRepeatTimes, job_scriptPara)
+                job_id, job_name, job_type, job_id, job_name, job_scripttypeid, job_projectid, job_taskid,
+                job_nodeErrorRepeatTimes, job_scriptPara)
             bpmndi = bpmndi + '''      <bpmndi:BPMNShape id="BPMNShape_%s" bpmnElement="%s">
         <omgdc:Bounds height="30" width="30" x="%s" y="%s"/>
       </bpmndi:BPMNShape>\n''' % (job_id, job_id, x_site, y_site)
@@ -132,14 +132,32 @@ def record_xml_file(sequence_flow, bpmndi_start, des_file, job_str, bpmndi_end):
     file_write.close()
 
 
-if __name__ == '__main__':
+def gen_servicetask():
+    servicetask = read_template_file(r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\05_workflow\serviceTask")
+    sh_cfg = work_book.sheet_by_name(workflow_list)
+    nrows_cfg = sh_cfg.nrows
 
+    work_flowCode = sh_cfg.cell_value(1, 0)
+    work_flowName = sh_cfg.cell_value(1, 1)
+    print servicetask
+
+
+# 读取模板文件
+def read_template_file(template_file):
+    with open(template_file, 'r') as f:
+        template_str = f.read()
+    return template_str
+
+
+if __name__ == '__main__':
     work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
     dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER"
 
-    # 全部生成
-    (sequenceFlow, bpmndi_start, workflow_code) = gen_line()
-    des_file = u"%s//%s.xml" % (dir_file, workflow_code)
-    (job_str, bpmndi_end) = gen_job()
+    gen_servicetask()
 
-    record_xml_file(sequenceFlow, bpmndi_start, des_file, job_str, bpmndi_end)
+
+
+
+
+
+

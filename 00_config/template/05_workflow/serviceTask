@@ -1,0 +1,16 @@
+<serviceTask id="U1321A3D1" name="cms_src_ws_rpt_cinema_member_init">
+    <extensionElements>
+        <activiti:field name="type">
+            <activiti:expression>IDEScript</activiti:expression>
+        </activiti:field>
+        <activiti:field name="params">
+            <activiti:expression>{"id":"{id}","name":"{name}","remark":"","{name}":2,"projectId":"{name}","taskId":"{name}","nodeErrorRepeatTimes":"{name}","scriptPara":"${TX_DATE}","repeatInterval":0,"repeatUnit":"s","scriptParaAc":[],"resultName":"","resultInfo":"","hasSave":true,"validateStr":""}</activiti:expression>
+        </activiti:field>
+        <activiti:field name="remark">
+            <activiti:expression></activiti:expression>
+        </activiti:field>
+        <activiti:field name="message">
+            <activiti:expression></activiti:expression>
+        </activiti:field>
+    </extensionElements>
+</serviceTask>
