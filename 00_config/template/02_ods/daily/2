@@ -5,7 +5,6 @@ ALTER TABLE {ODS}.{ods_tablename} DROP IF EXISTS PARTITION(ETL_LAD_DTE='${TX_DAT
 --增量数据
 INSERT INTO {ODS}.{ods_tablename} PARTITION (ETL_LAD_DTE='${TX_DATE}')
 SELECT
-{fileds},
-'${TX_DATE}'
+{fileds}
 FROM {SRC}.{src_tablename};
 

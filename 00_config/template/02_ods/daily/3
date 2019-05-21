@@ -46,7 +46,8 @@ where t2.{KEYID} is null;
 
 --插入新增和修改数据;
 insert into {ODS}.{ODSTABLE}_tmp4
-select t2.*,p1_property_ods.data_check({fileds}) as con_str,'${TX_DATE}'
+select t2.*,p1_property_ods.data_check({filedswithAliases}) as con_str,
+'${TX_DATE}'
 from {ODS}.{ODSTABLE}_tmp2 t1
 join {SRC}.{SRCTABLE} t2
 on t1.{KEYID} = t2.{KEYID};    --主键

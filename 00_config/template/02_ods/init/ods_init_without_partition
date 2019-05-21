@@ -1,4 +1,5 @@
 TRUNCATE table {ODS}.{ods_tablename};
+INSERT INTO {ODS}.{ods_tablename}
 SELECT
 {fileds},
 '${TX_DATE}'

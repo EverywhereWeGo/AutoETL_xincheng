@@ -92,7 +92,7 @@ def open_excel_3(excel_schema_name, excel_tab_name, src_system):
     cols_info = work_book.sheet_by_name("Col_Info_" + src_system)
     cols_nrows = cols_info.nrows
 
-    fileds = ""
+    fileds = "\n"
     SRC = ""
     src_tablename = ""
     keyid = ""
@@ -112,7 +112,8 @@ def open_excel_3(excel_schema_name, excel_tab_name, src_system):
         replace("{SRC}", SRC). \
         replace("{SRCTABLE}", src_tablename). \
         replace("{KEYID}", keyid). \
-        replace("{fileds}", fileds)
+        replace("{fileds}", fileds). \
+        replace("{filedswithAliases}", fileds.replace("\n", "\nt2."))
 
     return output_str
 
@@ -141,6 +142,7 @@ def get_create_tab_list(src_system):
 
 if __name__ == '__main__':
     work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\ods.xlsx")
+    des_file = r"C:\Users\Administrator\Desktop\GEN\DAILY\02ODS\%s\%s.hql"
 
     all_system = ["ydac", "sy", "jjr", "my"]
     for system in all_system:
@@ -148,16 +150,21 @@ if __name__ == '__main__':
         crt_tab_list_arr = get_create_tab_list(system)
         for i in range(0, len(crt_tab_list_arr)):
             all_str = ""
+            filename = ""
             if (crt_tab_list_arr[i][3] == 0):
                 all_str = open_excel_0(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1], system)
+                filename = str(crt_tab_list_arr[i][1])
             elif (crt_tab_list_arr[i][3] == 1):
                 all_str = open_excel_1(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1], system)
+                filename = str(crt_tab_list_arr[i][1])
             elif (crt_tab_list_arr[i][3] == 2):
                 all_str = open_excel_2(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1], system)
+                filename = str(crt_tab_list_arr[i][1])
             elif (crt_tab_list_arr[i][3] == 3):
                 all_str = open_excel_3(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1], system)
+                filename = str(crt_tab_list_arr[i][1]) + "_all_day"
 
             des_file = r"C:\Users\Administrator\Desktop\GEN\DAILY\02ODS\%s\%s.hql" \
-                       % (system, crt_tab_list_arr[i][1].lower())
+                       % (system, filename.lower())
             file_write = codecs.open(des_file, 'w', 'utf-8')
             file_write.writelines(all_str)

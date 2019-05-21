@@ -9,7 +9,7 @@
   </head>
   <body>
     <files>
-      {0}
+        {0}
     </files>
   </body>
 </export>

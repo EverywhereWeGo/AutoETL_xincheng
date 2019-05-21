@@ -40,7 +40,7 @@ def init_ods_with_partiton(excel_schema_name, excel_tab_name, src_system):
     return output_str
 
 
-def init_ods_without_partition(excel_schema_name, excel_tab_name, src_system):
+def init_ods_without_partition(excel_schema_name, excel_tab_name, templatenum, src_system):
     cols_info = work_book.sheet_by_name("Col_Info_" + src_system)
     cols_nrows = cols_info.nrows
 
@@ -53,6 +53,11 @@ def init_ods_without_partition(excel_schema_name, excel_tab_name, src_system):
             SRC = cols_info.cell_value(i, 0)
             src_tablename = cols_info.cell_value(i, 1)
     select_str = select_str.rstrip(",\n")
+
+    if (templatenum == 3):
+        con_str = "p1_property_ods.data_check(%s) as con_str" % (select_str)
+        select_str = select_str + ",\n" + con_str
+        print select_str
 
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\init\ods_init_without_partition")
@@ -97,7 +102,8 @@ if __name__ == '__main__':
             if (crt_tab_list_arr[i][2] == "Y"):
                 all_str = init_ods_with_partiton(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1], system)
             elif (crt_tab_list_arr[i][2] == "N"):
-                all_str = init_ods_without_partition(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1], system)
+                all_str = init_ods_without_partition(crt_tab_list_arr[i][0], crt_tab_list_arr[i][1],
+                                                     crt_tab_list_arr[i][3], system)
 
             des_file = r"C:\Users\Administrator\Desktop\GEN\INIT\02ODS\%s\%s_init.hql" \
                        % (system, crt_tab_list_arr[i][1].lower())

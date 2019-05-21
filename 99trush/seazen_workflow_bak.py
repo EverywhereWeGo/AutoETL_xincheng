@@ -11,11 +11,11 @@ import sys
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-
 # 生成线段连接及图表
 def gen_line():
+    sheet_name_cfg = u"依赖关系设置"
     # 打开导入配置excel，获取详细导入配置
-    sh_cfg = work_book.sheet_by_name("workflow_info")
+    sh_cfg = work_book.sheet_by_name(sheet_name_cfg)
     nrows_cfg = sh_cfg.nrows
 
     work_flowCode = sh_cfg.cell_value(1, 0)
@@ -23,10 +23,10 @@ def gen_line():
 
     # 初始化数据导入
     sequenceFlow = '''<?xml version='1.0' encoding='UTF-8'?>\n<definitions id="review-definitions" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn">\n      <process id="%s" name="%s">\n''' % (
-        work_flowCode, work_flowName)
+    work_flowCode, work_flowName)
     bpmndi = '''        <bpmndi:BPMNDiagram id="BPMNDiagram_%s">\n          <bpmndi:BPMNPlane id="BPMNPlane_%s" bpmnElement="%s">\n           <bpmndi:BPMNShape id="BPMNShape_Canvas" bpmnElement="BPMNShape_Canvas">
                 <omgdc:Bounds width="300" height="300" x="-80" y="-120"/>\n           </bpmndi:BPMNShape>\n''' % (
-        work_flowCode, work_flowCode, work_flowCode)
+    work_flowCode, work_flowCode, work_flowCode)
 
     # 增量数据导入
     # sequenceFlow = '''<definitions id="review-definitions" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://activiti.org/bpmn20" xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:activiti="http://activiti.org/bpmn">\n
@@ -51,7 +51,7 @@ def gen_line():
 
 # 生成线段连接及图表
 def gen_job():
-    sheet_name_cfg = "workflow_list"
+    sheet_name_cfg = "作业属性设置"
     # 打开导入配置excel，获取详细导入配置
     sh_cfg = work_book.sheet_by_name(sheet_name_cfg)
     nrows_cfg = sh_cfg.nrows
@@ -79,8 +79,13 @@ def gen_job():
             job_project_name = sh_cfg.cell_value(i, 3)
             job_scripttype = sh_cfg.cell_value(i, 5).upper()
             job_scripttypeid = 0
-            job_taskid = str(uuid.uuid3(uuid.NAMESPACE_DNS, (sh_cfg.cell_value(i, 7)).lower().__str__())).replace("-",
-                                                                                                                  '')
+            print sh_cfg.cell_value(i, 7)
+            job_taskid = str(uuid.uuid3(uuid.NAMESPACE_DNS, (sh_cfg.cell_value(i, 7)).lower().__str__())).replace("-",'')
+
+                         # str(uuid.uuid3(uuid.NAMESPACE_DNS, (sh_cfg.cell_value(i, 7)).lower().__str__())).replace("-",'')
+
+            print job_taskid
+
             if (job_scripttype == 'PYTHON'):
                 job_scripttypeid = 2
             elif (job_scripttype == 'KHAN'):
@@ -110,8 +115,8 @@ def gen_job():
                  </activiti:field>
               </extensionElements>
             </serviceTask>\n''' % (
-                job_id, job_name, job_type, job_id, job_name, job_scripttypeid, job_projectid, job_taskid,
-                job_nodeErrorRepeatTimes, job_scriptPara)
+            job_id, job_name, job_type, job_id, job_name, job_scripttypeid, job_projectid, job_taskid,
+            job_nodeErrorRepeatTimes, job_scriptPara)
             bpmndi = bpmndi + '''      <bpmndi:BPMNShape id="BPMNShape_%s" bpmnElement="%s">
         <omgdc:Bounds height="30" width="30" x="%s" y="%s"/>
       </bpmndi:BPMNShape>\n''' % (job_id, job_id, x_site, y_site)
@@ -132,32 +137,59 @@ def record_xml_file(sequence_flow, bpmndi_start, des_file, job_str, bpmndi_end):
     file_write.close()
 
 
-def gen_servicetask():
-    servicetask = read_template_file(r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\05_workflow\serviceTask")
-    sh_cfg = work_book.sheet_by_name(workflow_list)
-    nrows_cfg = sh_cfg.nrows
-
-    work_flowCode = sh_cfg.cell_value(1, 0)
-    work_flowName = sh_cfg.cell_value(1, 1)
-    print servicetask
-
-
-# 读取模板文件
-def read_template_file(template_file):
-    with open(template_file, 'r') as f:
-        template_str = f.read()
-    return template_str
-
-
 if __name__ == '__main__':
-    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
-    dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER"
 
-    gen_servicetask()
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/工作流/cms/cms.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/工作流/cms/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_customer/xc_customer.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_customer/"
+
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_cwy/xc_cwy.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_cwy/"
+
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_neighbor/xc_neighbor.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_neighbor/"
+
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_order/xc_order.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_order/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_parker/xc_parker.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/工作流/xc_parker/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/src工作流/xc_property/xc_property.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/src工作流/xc_property/"
+
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/src工作流/dqmly_dy/dqmly_dy.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/src工作流/dqmly_dy/"
 
 
+    # ODS
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/cms/cms.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/cms/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/db_temp/db_temp.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/db_temp/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/dqmly_dy/dqmly_dy.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/dqmly_dy/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_customer/xc_customer.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_customer/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_customer/xc_customer.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_customer/"
 
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_cwy/xc_cwy.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_cwy/"
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_neighbor/xc_neighbor.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_neighbor/"
 
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_order/xc_order.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_order/"
 
+    # work_book = xlrd.open_workbook(u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_parker/xc_parker.xlsx")
+    # dir_file = u"/Users/risheng/bfd/新城/code/数据接入/ods工作流/xc_parker/"
 
+    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\cms2.xlsx")
+    dir_file = r"C:\Users\Administrator\Desktop\asdf"
 
+    # 全部生成
+    (sequenceFlow, bpmndi_start, workflow_code) = gen_line()
+    des_file = u"%s//%s.xml" % (dir_file, workflow_code)
+    (job_str, bpmndi_end) = gen_job()
+
+    record_xml_file(sequenceFlow, bpmndi_start, des_file, job_str, bpmndi_end)

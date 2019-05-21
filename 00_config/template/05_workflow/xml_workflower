@@ -7,14 +7,20 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:activiti="http://activiti.org/bpmn">
     <process id="{process}" name="{name}">
-        <sequenceFlow sourceRef="U95CF58CB" targetRef="U1321A3D1" id="U7CF9AEDC" name="线段_1"/>
-        <startEvent id="U95CF58CB" name="开始节点"/>
+        {sequenceFlow}
+        <startEvent id="{startid}" name="{startname}"/>
         {serviceTask}
     </process>
 
-    <bpmndi:BPMNDiagram id="BPMNDiagram_bestar_cms">
-        <bpmndi:BPMNPlane id="BPMNPlane_bestar_cms" bpmnElement="bestar_cms">
-             {bpmndi}
+    <bpmndi:BPMNDiagram id="BPMNDiagram_{process}">
+        <bpmndi:BPMNPlane id="BPMNPlane_{process}" bpmnElement="{process}">
+            <bpmndi:BPMNShape id="BPMNShape_Canvas" bpmnElement="BPMNShape_Canvas">
+                <omgdc:Bounds width="30" height="30" x="-2000" y="-2250.5"/>
+            </bpmndi:BPMNShape>
+            <bpmndi:BPMNShape id="BPMNShape_{startid}" bpmnElement="{startid}">
+                <omgdc:Bounds width="30" height="30" x="2100" y="2475"/>
+            </bpmndi:BPMNShape>
+            {bpmndi}
         </bpmndi:BPMNPlane>
     </bpmndi:BPMNDiagram>
 </definitions>

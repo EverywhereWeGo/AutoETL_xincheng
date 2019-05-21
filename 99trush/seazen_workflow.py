@@ -13,7 +13,7 @@ sys.setdefaultencoding('utf-8')
 
 # 生成线段连接及图表
 def gen_line():
-    sheet_name_cfg = u"依赖关系设置"
+    sheet_name_cfg = u"workflow_info"
     # 打开导入配置excel，获取详细导入配置
     sh_cfg = work_book.sheet_by_name(sheet_name_cfg)
     nrows_cfg = sh_cfg.nrows
@@ -51,7 +51,7 @@ def gen_line():
 
 # 生成线段连接及图表
 def gen_job():
-    sheet_name_cfg = "作业属性设置"
+    sheet_name_cfg = "workflow_list"
     # 打开导入配置excel，获取详细导入配置
     sh_cfg = work_book.sheet_by_name(sheet_name_cfg)
     nrows_cfg = sh_cfg.nrows
@@ -94,10 +94,10 @@ def gen_job():
             job_scriptPara = sh_cfg.cell_value(i, 9)
             x_site = int(x) + int(i) * int(x_interval)
             y_site = int(y) + int(i) * int(y_interval)
-            job_str = job_str + '''            <serviceTask id="%s" name="%s">
+            job_str = job_str + '''            <serviceTask id="" name="">
               <extensionElements>
                  <activiti:field name="type">
-                   <activiti:expression>%s</activiti:expression>
+                   <activiti:expression></activiti:expression>
                  </activiti:field>
                  <activiti:field name="params">
                    <activiti:expression>{"id":"%s","name":"%s","remark":"","scriptTypeId":%s,"projectId":"%s","taskId":"%s","nodeErrorRepeatTimes":"%s","scriptPara":"${%s}","repeatInterval":0,"repeatUnit":"s","scriptParaAc":[],"resultName":"","resultInfo":"","hasSave":true,"validateStr":""}</activiti:expression>
@@ -110,7 +110,7 @@ def gen_job():
                  </activiti:field>
               </extensionElements>
             </serviceTask>\n''' % (
-            job_id, job_name, job_type, job_id, job_name, job_scripttypeid, job_projectid, job_taskid,
+            job_id, job_name, job_scripttypeid, job_projectid, job_taskid,
             job_nodeErrorRepeatTimes, job_scriptPara)
             bpmndi = bpmndi + '''      <bpmndi:BPMNShape id="BPMNShape_%s" bpmnElement="%s">
         <omgdc:Bounds height="30" width="30" x="%s" y="%s"/>
@@ -119,6 +119,8 @@ def gen_job():
   </bpmndi:BPMNDiagram>
 </definitions>'''
     job_str = job_str + '           </process>\n'
+
+    print bpmndi
     return (job_str, bpmndi)
 
 
@@ -134,7 +136,7 @@ def record_xml_file(sequence_flow, bpmndi_start, des_file, job_str, bpmndi_end):
 
 if __name__ == '__main__':
 
-    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\cms.xlsx")
+    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
     dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER"
 
     # 全部生成

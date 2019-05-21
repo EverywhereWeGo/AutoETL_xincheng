@@ -31,6 +31,7 @@ def gen_job_xml(files, pa):
         filename = filenames[filenames.rindex("\\") + 1:]
         pat = filenames[len(pa):filenames.rindex("\\")].replace("\\", "/")
         code = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(filename))).replace("-", '')
+        print filename
         type_code = ""
         # 根据文件类型判断种类
         if (filename.find(r".sh") != -1):
@@ -40,7 +41,7 @@ def gen_job_xml(files, pa):
         elif (filename.find(r".hql") != -1):
             type_code = "3"
 
-        xmls = xmls + """<file tree_name="%s" info_code="%s" type_code="%s" mr="0" queue="" priority="" remark="" path="%s"/>\n      """ \
+        xmls = xmls + """<file tree_name="%s" info_code="%s" type_code="%s" mr="0" queue="" priority="" remark="" path="%s"/>\n\t\t""" \
                % (filename, code, type_code, pat)
     return xmls
 
@@ -48,7 +49,7 @@ def gen_job_xml(files, pa):
 # 生成xml文件
 def record_py_file(strin):
     # 读取模板文件
-    template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\xml_import"
+    template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\04_xml_import\xml_import"
     with open(template_file, 'r') as f:
         file_read = f.read()
     stri = file_read.replace("{0}", strin)
@@ -62,8 +63,8 @@ def record_py_file(strin):
 
 # 生成zip包
 def gen_zip():
-    os.remove(r'C:\Users\Administrator\Desktop\new.zip')
-    newZip = zipfile.ZipFile(r'C:\Users\Administrator\Desktop\new.zip', 'a')
+    os.remove(r'C:\Users\Administrator\Desktop\xml.zip')
+    newZip = zipfile.ZipFile(r'C:\Users\Administrator\Desktop\xml.zip', 'a')
 
     files = get_filelist("C:\Users\Administrator\Desktop\XML")
     for filenames in files:
@@ -71,7 +72,7 @@ def gen_zip():
 
     files = get_filelist(os.getcwd())
     for filenames in files:
-        if (filenames != r"C:\Users\Administrator\Desktop\AutoETL\02_xmlpackage\02_GenImportXml.py"):
+        if (filenames.replace("\\", "/") != sys.argv[0]):
             newZip.write(filenames.replace("C:\\Users\\Administrator\\Desktop\\AutoETL\\02_xmlpackage\\", ""),
                          compress_type=zipfile.ZIP_DEFLATED)
             os.remove(filenames)
