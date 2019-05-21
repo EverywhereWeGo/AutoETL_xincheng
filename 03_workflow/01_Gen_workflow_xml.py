@@ -125,7 +125,7 @@ def gen_zip():
     files = get_filelist(os.getcwd())
     for filenames in files:
         if (filenames.replace("\\", "/") != sys.argv[0]):
-            newZip.write(filenames.replace(os.getcwd()+"\\", ""),compress_type=zipfile.ZIP_DEFLATED)
+            newZip.write(filenames.replace(os.getcwd() + "\\", ""), compress_type=zipfile.ZIP_DEFLATED)
             os.remove(filenames)
     newZip.close()
 
@@ -137,6 +137,16 @@ def get_filelist(pa):
         for filename in files:
             Filelist.append(os.path.join(home, filename))
     return Filelist
+
+# 删除文件夹下所有文件
+def del_file(del_path):
+    ls = os.listdir(del_path)
+    for i in ls:
+        c_path = os.path.join(del_path, i)
+        if os.path.isdir(c_path):
+            del_file(c_path)
+        else:
+            os.remove(c_path)
 
 
 # 读取模板文件
@@ -161,8 +171,10 @@ def get_job_scripttypeid(job_scripttype):
 
 
 if __name__ == '__main__':
+    del_file(r"C:\Users\Administrator\Desktop\WORKFLOWER")
     work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
-    dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER\a.xml"
+    flowname = work_book.sheet_by_name("workflow_info").cell_value(1, 0)
+    dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER\%s.xml" % (flowname)
 
     (st, bi) = gen_servicetask_and_bpmndi()
     sF = gen_sequenceFlow()
