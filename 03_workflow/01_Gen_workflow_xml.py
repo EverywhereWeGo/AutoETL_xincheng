@@ -16,101 +16,110 @@ sys.setdefaultencoding('utf-8')
 
 
 # 生成py文件
-def record_xml_file(servicetasks, bpmndis, sequenceFlows, dirfile):
+def record_xml_file(servicetasks, bpmndis, sequenceFlows, dirfile, flowme):
     workflow_template = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\05_workflow\xml_workflower")
 
+    print "flowname-------" + flowme
     sh_cfg = work_book.sheet_by_name("workflow_info")
-    process = sh_cfg.cell_value(1, 0)
-    name = sh_cfg.cell_value(1, 1)
-    startname = sh_cfg.cell_value(1, 2)
-    startid = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(startname))).replace("-", '')[1:9].upper()
+    workflow = ""
+    for i in range(1, sh_cfg.nrows):
+        if (sh_cfg.cell_value(i, 0) == flowme):
+            process = sh_cfg.cell_value(i, 0)
+            name = sh_cfg.cell_value(i, 1)
+            startname = sh_cfg.cell_value(i, 2)
+            startid = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(startname))).replace("-", '')[1:9].upper()
+            print name
+            print process
+            print startname
+            print startid
+            workflow = workflow_template.replace("{sequenceFlow}", sequenceFlows). \
+                replace("{serviceTask}", servicetasks). \
+                replace("{bpmndi}", bpmndis). \
+                replace("{process}", process). \
+                replace("{name}", name). \
+                replace("{startid}", startid). \
+                replace("{startname}", startname)
+            break
 
-    workflow = workflow_template.replace("{sequenceFlow}", sequenceFlows). \
-        replace("{serviceTask}", servicetasks). \
-        replace("{bpmndi}", bpmndis). \
-        replace("{process}", process). \
-        replace("{name}", name). \
-        replace("{startid}", startid). \
-        replace("{startname}", startname)
-
-    # print workflow
+        # print workflow
 
     file_write = codecs.open(dirfile, 'w', 'utf-8')
     file_write.writelines(workflow)
     file_write.close()
 
 
-def gen_sequenceFlow():
+def gen_sequenceFlow(flowname):
     sequenceFlow_template = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\05_workflow\sequenceFlow")
     sh_cfg = work_book.sheet_by_name("workflow_info")
-    nrows_cfg = sh_cfg.nrows
 
     sequenceFlows = ""
-    for i in range(1, nrows_cfg):
-        # 判断依赖节点是否为空
-        line_name = "线段_" + str(i)
-        line_id = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, line_name)).replace("-", '').upper()[1:9]
-        sourceRef = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 2)))).replace("-", '')[1:9]
-        targetRef = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 3)))).replace("-", '')[1:9]
-        sequenceFlow = sequenceFlow_template.replace("\n", "\n\t\t"). \
-            replace("{sourceRef}", sourceRef.upper()). \
-            replace("{targetRef}", targetRef.upper()). \
-            replace("{id}", line_id). \
-            replace("{name}", line_name)
+    # for i in range(1, sh_cfg.nrows):
+    for i in range(1, 4):
+        if (sh_cfg.cell_value(i, 0) == flowname):
+            line_name = "线段_" + str(i)
+            line_id = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, line_name)).replace("-", '').upper()[1:9]
+            sourceRef = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 2)))).replace("-", '')[1:9]
+            targetRef = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 3)))).replace("-", '')[1:9]
+            sequenceFlow = sequenceFlow_template.replace("\n", "\n\t\t"). \
+                replace("{sourceRef}", sourceRef.upper()). \
+                replace("{targetRef}", targetRef.upper()). \
+                replace("{id}", line_id). \
+                replace("{name}", line_name)
 
-        sequenceFlows = sequenceFlows + sequenceFlow
+            sequenceFlows = sequenceFlows + sequenceFlow
 
-    print sequenceFlows
+    # print sequenceFlows
     return sequenceFlows
 
 
-def gen_servicetask_and_bpmndi():
+def gen_servicetask_and_bpmndi(flowname):
     servicetask_template = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\05_workflow\serviceTask")
     bpmndi_template = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\05_workflow\bpmndi")
 
     sh_cfg = work_book.sheet_by_name("workflow_list")
-    nrows_cfg = sh_cfg.nrows
 
     servicetasks = ""
     bpmndis = ""
-    for i in range(1, nrows_cfg):
-        job_name = sh_cfg.cell_value(i, 6).lower()
-        job_id = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(job_name))).replace("-", '').upper()[1:9]
-        job_type = sh_cfg.cell_value(i, 2)
-        job_scripttypeid = get_job_scripttypeid(sh_cfg.cell_value(i, 5).upper())
-        job_projectid = sh_cfg.cell_value(i, 4)
-        job_taskid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 7).lower()))).replace("-", '')
-        job_nodeErrorRepeatTimes = str(int(sh_cfg.cell_value(i, 8)))
-        job_scriptPara = sh_cfg.cell_value(i, 9)
+    # for i in range(1, sh_cfg.nrows):
+    for i in range(1, 4):
+        if (sh_cfg.cell_value(i, 0) == flowname):
+            job_name = sh_cfg.cell_value(i, 6).lower()
+            job_id = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(job_name))).replace("-", '').upper()[1:9]
+            job_type = sh_cfg.cell_value(i, 2)
+            job_scripttypeid = get_job_scripttypeid(sh_cfg.cell_value(i, 5).upper())
+            job_projectid = sh_cfg.cell_value(i, 4)
+            job_taskid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 7).lower()))).replace("-", '')
+            job_nodeErrorRepeatTimes = str(int(sh_cfg.cell_value(i, 8)))
+            job_scriptPara = sh_cfg.cell_value(i, 9)
 
-        servicetask = servicetask_template.replace(",\n", ",").replace("\n", "\n\t\t"). \
-            replace("{id}", job_id). \
-            replace("{name}", job_name). \
-            replace("{type}", job_type). \
-            replace("{scriptTypeId}", job_scripttypeid). \
-            replace("{projectId}", job_projectid). \
-            replace("{taskId}", job_taskid). \
-            replace("{nodeErrorRepeatTimes}", job_nodeErrorRepeatTimes). \
-            replace("{scriptPara}", job_scriptPara)
+            servicetask = servicetask_template.replace(",\n", ",").replace("\n", "\n\t\t"). \
+                replace("{id}", job_id). \
+                replace("{name}", job_name). \
+                replace("{type}", job_type). \
+                replace("{scriptTypeId}", job_scripttypeid). \
+                replace("{projectId}", job_projectid). \
+                replace("{taskId}", job_taskid). \
+                replace("{nodeErrorRepeatTimes}", job_nodeErrorRepeatTimes). \
+                replace("{scriptPara}", job_scriptPara)
 
-        servicetasks = servicetasks + servicetask
+            servicetasks = servicetasks + servicetask
 
-        # 生成bpmndi
-        x = 200
-        y = 200
-        x_interval = 80
-        y_interval = 80
-        bpmndi = bpmndi_template.replace("\n", "\n\t\t\t").replace("{id}", job_id). \
-            replace("{x}", str(x + int(i) * x_interval)). \
-            replace("{y}", str(y + int(i) * y_interval))
-        bpmndis = bpmndis + bpmndi
+            # 生成bpmndi
+            x = 200
+            y = 200
+            x_interval = 80
+            y_interval = 80
+            bpmndi = bpmndi_template.replace("\n", "\n\t\t\t").replace("{id}", job_id). \
+                replace("{x}", str(x + int(i) * x_interval)). \
+                replace("{y}", str(y + int(i) * y_interval))
+            bpmndis = bpmndis + bpmndi
 
     # print bpmndis
-    print servicetasks
+    # print servicetasks
     return (servicetasks, bpmndis)
 
 
@@ -137,6 +146,7 @@ def get_filelist(pa):
         for filename in files:
             Filelist.append(os.path.join(home, filename))
     return Filelist
+
 
 # 删除文件夹下所有文件
 def del_file(del_path):
@@ -173,10 +183,17 @@ def get_job_scripttypeid(job_scripttype):
 if __name__ == '__main__':
     del_file(r"C:\Users\Administrator\Desktop\WORKFLOWER")
     work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
-    flowname = work_book.sheet_by_name("workflow_info").cell_value(1, 0)
-    dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER\%s.xml" % (flowname)
+    lists = work_book.sheet_by_name("workflow_list")
+    workflowname = set()
+    for i in range(1, lists.nrows):
+        workflowname.add(lists.cell_value(i, 0))
+    print len(workflowname)
 
-    (st, bi) = gen_servicetask_and_bpmndi()
-    sF = gen_sequenceFlow()
-    record_xml_file(st, bi, sF, dir_file)
+    for d in workflowname:
+        dir_file = r"C:\Users\Administrator\Desktop\WORKFLOWER\%s.xml" % (d)
+        (st, bi) = gen_servicetask_and_bpmndi(d)
+        sF = gen_sequenceFlow(d)
+        # print "asdfasdf__" + d
+        record_xml_file(st, bi, sF, dir_file, d)
+
     gen_zip()
