@@ -73,8 +73,7 @@ def gen_zip():
     files = get_filelist(os.getcwd())
     for filenames in files:
         if (filenames.replace("\\", "/") != sys.argv[0]):
-            newZip.write(filenames.replace("C:\\Users\\Administrator\\Desktop\\AutoETL\\02_xmlpackage\\", ""),
-                         compress_type=zipfile.ZIP_DEFLATED)
+            newZip.write(filenames.replace(os.getcwd() + "\\", ""), compress_type=zipfile.ZIP_DEFLATED)
             os.remove(filenames)
     newZip.close()
 
