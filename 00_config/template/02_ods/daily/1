@@ -8,7 +8,7 @@ SELECT
 T1.*
 FROM {ODS}.{ods_tablename} T1
 LEFT JOIN {SRC}.{src_tablename} T2
-ON T1.{keyid} = T2.{keyid}
+ON {oncondition}
 WHERE T1.ETL_LAD_DTE<'${TX_DATE}' AND T2.{keyid} is null;
 
 --增量数据

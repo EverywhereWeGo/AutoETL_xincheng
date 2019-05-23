@@ -42,6 +42,8 @@ def open_excel_1(excel_schema_name, excel_tab_name, src_system):
     SRC = ""
     src_tablename = ""
     keyid = ""
+    oncondition = ""
+    oncondition_template = "T1.{keyid} = T2.{keyid} AND "
     for i in range(0, cols_nrows):
         if (cols_info.cell_value(i, 6).lower() == excel_tab_name.lower()):
             fileds = fileds + cols_info.cell_value(i, 3) + ",\n"
@@ -49,14 +51,16 @@ def open_excel_1(excel_schema_name, excel_tab_name, src_system):
             src_tablename = cols_info.cell_value(i, 1)
             if (cols_info.cell_value(i, 8) == "Y"):
                 keyid = cols_info.cell_value(i, 3)
+                oncondition = oncondition + oncondition_template.replace("{keyid}", keyid)
     fileds = fileds.rstrip(",\n")
-
+    oncondition = oncondition[:-4]
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\daily\1")
     output_str = template_str.replace("{ODS}", excel_schema_name). \
         replace("{ods_tablename}", excel_tab_name). \
         replace("{SRC}", SRC). \
         replace("{src_tablename}", src_tablename). \
+        replace("{oncondition}", oncondition). \
         replace("{keyid}", keyid). \
         replace("{fileds}", fileds)
 
@@ -96,6 +100,10 @@ def open_excel_3(excel_schema_name, excel_tab_name, src_system):
     SRC = ""
     src_tablename = ""
     keyid = ""
+    SELECTKEYID = ""
+    SELECTKEYIDwithalias = ""
+    oncondition = ""
+    oncondition_template = "T1.{keyid} = T2.{keyid} AND "
     for i in range(0, cols_nrows):
         if (cols_info.cell_value(i, 6).lower() == excel_tab_name.lower()):
             fileds = fileds + cols_info.cell_value(i, 3) + ",\n"
@@ -103,8 +111,15 @@ def open_excel_3(excel_schema_name, excel_tab_name, src_system):
             src_tablename = cols_info.cell_value(i, 1)
             if (cols_info.cell_value(i, 8) == "Y"):
                 keyid = cols_info.cell_value(i, 3)
-    fileds = fileds.rstrip(",\n")
+                SELECTKEYID = SELECTKEYID + keyid + ",\n"
+                SELECTKEYIDwithalias = SELECTKEYIDwithalias + "T1." + keyid + ",\n"
+                oncondition = oncondition + oncondition_template.replace("{keyid}", keyid)
 
+    print SELECTKEYID
+    fileds = fileds.rstrip(",\n")
+    SELECTKEYID = SELECTKEYID.rstrip(",\n")
+    SELECTKEYIDwithalias = SELECTKEYIDwithalias.rstrip(",\n")
+    oncondition = oncondition[:-4]
     template_str = read_template_file(
         r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\02_ods\daily\3")
     output_str = template_str.replace("{ODS}", excel_schema_name). \
@@ -112,6 +127,9 @@ def open_excel_3(excel_schema_name, excel_tab_name, src_system):
         replace("{SRC}", SRC). \
         replace("{SRCTABLE}", src_tablename). \
         replace("{KEYID}", keyid). \
+        replace("{SELECTKEYID}", SELECTKEYID). \
+        replace("{SELECTKEYIDwithalias}", SELECTKEYIDwithalias). \
+        replace("{oncondition}", oncondition). \
         replace("{fileds}", fileds). \
         replace("{filedswithAliases}", fileds.replace("\n", "\nt2."))
 
