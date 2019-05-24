@@ -55,8 +55,7 @@ def gen_sequenceFlow(flowname):
     sh_cfg = work_book.sheet_by_name("workflow_info")
 
     sequenceFlows = ""
-    # for i in range(1, sh_cfg.nrows):
-    for i in range(1, 4):
+    for i in range(1, sh_cfg.nrows):
         if (sh_cfg.cell_value(i, 0) == flowname):
             line_name = "线段_" + str(i)
             line_id = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, line_name)).replace("-", '').upper()[1:9]
@@ -84,8 +83,7 @@ def gen_servicetask_and_bpmndi(flowname):
 
     servicetasks = ""
     bpmndis = ""
-    # for i in range(1, sh_cfg.nrows):
-    for i in range(1, 4):
+    for i in range(1, sh_cfg.nrows):
         if (sh_cfg.cell_value(i, 0) == flowname):
             job_name = sh_cfg.cell_value(i, 6).lower()
             job_id = 'U' + str(uuid.uuid3(uuid.NAMESPACE_DNS, str(job_name))).replace("-", '').upper()[1:9]
