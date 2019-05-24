@@ -92,7 +92,14 @@ def gen_servicetask_and_bpmndi(flowname):
             job_projectid = sh_cfg.cell_value(i, 4)
             job_taskid = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(sh_cfg.cell_value(i, 7).lower()))).replace("-", '')
             job_nodeErrorRepeatTimes = str(int(sh_cfg.cell_value(i, 8)))
-            job_scriptPara = sh_cfg.cell_value(i, 9)
+            job_scriptPara = ""
+            jod_scriptParaAc = ""
+            if (job_scripttypeid == "2"):
+                job_scriptPara = "\"" + sh_cfg.cell_value(i, 9) + "\""
+                jod_scriptParaAc = "[]"
+            elif (job_scripttypeid == "3"):
+                job_scriptPara = "[" + sh_cfg.cell_value(i, 9) + "]"
+                jod_scriptParaAc = job_scriptPara
 
             servicetask = servicetask_template.replace(",\n", ",").replace("\n", "\n\t\t"). \
                 replace("{id}", job_id). \
@@ -102,10 +109,11 @@ def gen_servicetask_and_bpmndi(flowname):
                 replace("{projectId}", job_projectid). \
                 replace("{taskId}", job_taskid). \
                 replace("{nodeErrorRepeatTimes}", job_nodeErrorRepeatTimes). \
-                replace("{scriptPara}", job_scriptPara)
+                replace("{scriptPara}", job_scriptPara). \
+                replace("{scriptParaAc}", jod_scriptParaAc)
 
             servicetasks = servicetasks + servicetask
-
+            print servicetasks
             # 生成bpmndi
             x = 200
             y = 200
