@@ -84,7 +84,7 @@ def get_special_fileds(src_system, tablename):
     cols_nrows = cols_info.nrows
     fileds = ""
     for i in range(0, cols_nrows):
-        if (cols_info.cell_value(i, 2) == tablename):
+        if (cols_info.cell_value(i, 2).lower() == tablename.lower()):
             fileds = fileds + cols_info.cell_value(i, 3) + ",\n"
     fileds = fileds.rstrip(",\n")
     # print fileds

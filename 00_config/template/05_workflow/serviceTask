@@ -12,7 +12,7 @@
 "taskId":"{taskId}",
 "nodeErrorRepeatTimes":"{nodeErrorRepeatTimes}",
 "scriptPara":{scriptPara},
-"repeatInterval":0,
+"repeatInterval":"{repeatInterval}",
 "repeatUnit":"s",
 "scriptParaAc":{scriptParaAc},
 "resultName":"",

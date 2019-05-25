@@ -100,7 +100,7 @@ def gen_servicetask_and_bpmndi(flowname):
             elif (job_scripttypeid == "3"):
                 job_scriptPara = "[" + sh_cfg.cell_value(i, 9) + "]"
                 jod_scriptParaAc = job_scriptPara
-
+            job_repeatInterval = str(int(sh_cfg.cell_value(i, 10)))
             servicetask = servicetask_template.replace(",\n", ",").replace("\n", "\n\t\t"). \
                 replace("{id}", job_id). \
                 replace("{name}", job_name). \
@@ -110,7 +110,8 @@ def gen_servicetask_and_bpmndi(flowname):
                 replace("{taskId}", job_taskid). \
                 replace("{nodeErrorRepeatTimes}", job_nodeErrorRepeatTimes). \
                 replace("{scriptPara}", job_scriptPara). \
-                replace("{scriptParaAc}", jod_scriptParaAc)
+                replace("{scriptParaAc}", jod_scriptParaAc). \
+                replace("{repeatInterval}", job_repeatInterval)
 
             servicetasks = servicetasks + servicetask
             print servicetasks

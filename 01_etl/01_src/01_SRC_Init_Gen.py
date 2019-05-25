@@ -57,6 +57,8 @@ def open_excel(sheetname, src_system):
         if (sh_cfg.cell_value(i, 8).lower() == "y"):
             all_fileds = get_special_fileds(src_system, sh_cfg.cell_value(i, 2))
 
+            print all_fileds
+
         # 读取增量模板
         template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\01_src\src_load_file_incr"
         with open(template_file, 'r') as f:
@@ -84,7 +86,7 @@ def get_special_fileds(src_system, tablename):
     cols_nrows = cols_info.nrows
     fileds = ""
     for i in range(0, cols_nrows):
-        if (cols_info.cell_value(i, 2) == tablename):
+        if (cols_info.cell_value(i, 2).lower() == tablename.lower()):
             fileds = fileds + cols_info.cell_value(i, 3) + ",\n"
     fileds = fileds.rstrip(",\n")
     # print fileds
@@ -95,7 +97,7 @@ def record_py_file(dirname, file_name, load_file_str):
     # 指定文件生成路径
     des_file = r"C:\Users\Administrator\Desktop\GEN\INIT\01SRC\%s\%s_init.py" % (dirname, file_name)
     file_write = codecs.open(des_file, 'w', 'utf-8')
-    print load_file_str
+    # print load_file_str
     file_write.writelines(load_file_str)
 
     file_write.close()
