@@ -22,7 +22,7 @@ def open_excel(sheetname, src_system):
         dbfunction = ""
         arguments = ""
         if (sh_cfg.cell_value(i, 6) == 1):
-            arguments = "(connect,username,password)"
+            arguments = "(sqoopenv,onnect,username,password)"
             # 判断源数据库类型
             if (sh_cfg.cell_value(i, 0).lower() == "mysql"):
                 dbfunction = " 1=1 "
@@ -37,7 +37,7 @@ def open_excel(sheetname, src_system):
                 srctablename = sh_cfg.cell_value(i, 2)
                 destablename = sh_cfg.cell_value(i, 4) + "." + sh_cfg.cell_value(i, 5)
         elif (sh_cfg.cell_value(i, 6) == 0):
-            arguments = "(connect,username,password,excute_date)"
+            arguments = "(sqoopenv,connect,username,password,excute_date)"
             # 判断源数据库类型
             if (sh_cfg.cell_value(i, 0).lower() == "mysql"):
                 dbfunction = " DATE(IFNULL({condition},'1999-01-01 00:00:00')) <= str_to_date('%s', '%%Y-%%m-%%d %%H')"
