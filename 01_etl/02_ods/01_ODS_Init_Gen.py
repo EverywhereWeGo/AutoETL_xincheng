@@ -93,8 +93,8 @@ def get_create_tab_list(src_system):
 
 if __name__ == '__main__':
     work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\ods.xlsx")
-
-    all_system = ["ydac", "sy", "jjr", "my"]
+    # all_system = ["ydac", "sy", "jjr", "my"]
+    all_system = ["xcs"]
     for system in all_system:
         crt_tab_list_arr = get_create_tab_list(system)
         all_str = ""

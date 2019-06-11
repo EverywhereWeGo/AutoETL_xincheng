@@ -189,7 +189,9 @@ def get_job_scripttypeid(job_scripttype):
 
 if __name__ == '__main__':
     del_file(r"C:\Users\Administrator\Desktop\WORKFLOWER")
-    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
+    # work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow.xlsx")
+    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\workflow_init_xcs.xlsx")
+
     lists = work_book.sheet_by_name("workflow_list")
     workflowname = set()
     for i in range(1, lists.nrows):
@@ -202,5 +204,4 @@ if __name__ == '__main__':
         sF = gen_sequenceFlow(d)
         # print "asdfasdf__" + d
         record_xml_file(st, bi, sF, dir_file, d)
-
     gen_zip()

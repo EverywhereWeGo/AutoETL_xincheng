@@ -18,6 +18,7 @@ def get_filelist(pa):
     Filelist = []
     for home, dirs, files in os.walk(pa):
         for filename in files:
+            print os.path.join(home, filename)
             Filelist.append(os.path.join(home, filename))
     return Filelist
 
@@ -91,9 +92,8 @@ def del_file(del_path):
 
 # 主程序
 if __name__ == '__main__':
-    path = unicode("C:\Users\Administrator\Desktop\GEN", 'utf-8')
-
     del_file(r"C:\Users\Administrator\Desktop\XML")
+    path = unicode("C:\Users\Administrator\Desktop\GEN", 'utf-8')
     scriptsname = get_filelist(path)
     xml_str = gen_job_xml(scriptsname, path)
     record_py_file(xml_str)

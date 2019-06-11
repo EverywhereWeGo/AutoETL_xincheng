@@ -22,6 +22,7 @@ def open_excel(sheetname, src_system):
         destablename = ""
         dbfunction = ""
         arguments = ""
+        schema = sh_cfg.cell_value(i, 1).lower()
         if (sh_cfg.cell_value(i, 6) == 1):
             arguments = "(sqoopenv,connect,username,password)"
             # 判断源数据库类型
@@ -62,7 +63,8 @@ def open_excel(sheetname, src_system):
         with open(template_file, 'r') as f:
             sqoop_template = f.read()
 
-        sqoop_cmd = sqoop_template.replace("{section}", src_system).replace("{mjn}", srctablename). \
+        sqoop_cmd = sqoop_template.replace("{section}", src_system + "_" + schema). \
+            replace("{mjn}", srctablename). \
             replace("{srctablename}", srctablename). \
             replace("{dbfunction}", dbfunction). \
             replace("{fileds}", all_fileds). \
@@ -103,6 +105,8 @@ def record_py_file(dirname, file_name, load_file_str):
 if __name__ == '__main__':
     work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\src.xlsx")
     # all_system = ["test", "jjr"]
-    all_system = ["my", "sy", "jjr", "ydac"]
+    # all_system = ["my", "sy", "jjr", "ydac"]
+    all_system = ["xcs"]
+
     for i in all_system:
         open_excel("load_cfg_", i)
