@@ -13,12 +13,11 @@ import shutil
 import zipfile
 
 
-# 获取指定文件夹下所有脚本名称
+# 获取指定文件夹下所有脚本名称(带路径)
 def get_filelist(pa):
     Filelist = []
     for home, dirs, files in os.walk(pa):
         for filename in files:
-            print os.path.join(home, filename)
             Filelist.append(os.path.join(home, filename))
     return Filelist
 
@@ -26,13 +25,14 @@ def get_filelist(pa):
 def gen_job_xml(files, pa):
     xmls = ""
     for filenames in files:
-        # 复制文件
-        shutil.copy(filenames, "C:\Users\Administrator\Desktop\XML")
-        shutil.copy(filenames, os.getcwd())
-        filename = filenames[filenames.rindex("\\") + 1:]
-        pat = filenames[len(pa):filenames.rindex("\\")].replace("\\", "/")
+        # 复制到目标文件夹一份
+        shutil.copy(filenames, destination_folder)
+        # 获取纯粹的脚本名
+        filename = filenames[filenames.rindex(os.path.sep) + 1:]
+        # 脚本的相对路径用于bdos中的层级显示
+        pat = filenames[len(pa):filenames.rindex(os.path.sep)].replace(os.path.sep, "/")
         code = str(uuid.uuid3(uuid.NAMESPACE_DNS, str(filename))).replace("-", '')
-        print filename
+
         type_code = ""
         # 根据文件类型判断种类
         if (filename.find(r".sh") != -1):
@@ -49,32 +49,34 @@ def gen_job_xml(files, pa):
 
 # 生成xml文件
 def record_py_file(strin):
+    project_path = "/Users/everywherewego/PycharmProjects/autoetl_xincheng"
     # 读取模板文件
-    template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\04_xml_import\xml_import"
+    template_file = project_path + "/00_config/template/04_xml_import/xml_import"
     with open(template_file, 'r') as f:
         file_read = f.read()
     stri = file_read.replace("{0}", strin)
 
     file_name = "b82c2f2f309e4a4b962f858163dee4af.xml"
-    des_file = r"C:\Users\Administrator\Desktop\XML\%s" % (file_name)
+    des_file = destination_folder + os.path.sep + file_name
     file_write = codecs.open(des_file, 'w', 'utf-8')
     file_write.writelines(stri)
     file_write.close()
 
 
 # 生成zip包
-def gen_zip():
-    os.remove(r'C:\Users\Administrator\Desktop\xml.zip')
-    newZip = zipfile.ZipFile(r'C:\Users\Administrator\Desktop\xml.zip', 'a')
+def gen_zip(zip_path):
+    os.remove(zip_path)
+    newZip = zipfile.ZipFile(zip_path, 'a')
 
-    files = get_filelist("C:\Users\Administrator\Desktop\XML")
+    files = get_filelist(destination_folder)
     for filenames in files:
         shutil.copy(filenames, os.getcwd())
 
     files = get_filelist(os.getcwd())
     for filenames in files:
-        if (filenames.replace("\\", "/") != sys.argv[0]):
-            newZip.write(filenames.replace(os.getcwd() + "\\", ""), compress_type=zipfile.ZIP_DEFLATED)
+        #写入除了脚本名之外的文件到zip。为什么不从destination_folder文件夹直接复制，因为会连同父级路径结构一起打包，所有先移到脚本同一级路径
+        if (filenames.replace(os.path.sep, "/") != sys.argv[0]):
+            newZip.write(filenames.replace(os.getcwd() + os.path.sep, ""), compress_type=zipfile.ZIP_DEFLATED)
             os.remove(filenames)
     newZip.close()
 
@@ -92,9 +94,15 @@ def del_file(del_path):
 
 # 主程序
 if __name__ == '__main__':
-    del_file(r"C:\Users\Administrator\Desktop\XML")
-    path = unicode("C:\Users\Administrator\Desktop\GEN", 'utf-8')
-    scriptsname = get_filelist(path)
-    xml_str = gen_job_xml(scriptsname, path)
+    # 存放所有脚本的路径
+    destination_folder = "/Users/everywherewego/Desktop/XML"
+    # zip生成的路径
+    zip_destination = "/Users/everywherewego/Desktop/xml.zip"
+    # 所有生成的脚本的父文件夹
+    script_path = "/Users/everywherewego/Desktop/GEN"
+    # 清理工作，为了重跑
+    del_file(destination_folder)
+    scriptsname = get_filelist(script_path)
+    xml_str = gen_job_xml(scriptsname, script_path)
     record_py_file(xml_str)
-    gen_zip()
+    gen_zip(zip_destination)

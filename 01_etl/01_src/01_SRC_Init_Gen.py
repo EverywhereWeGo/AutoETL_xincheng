@@ -4,6 +4,7 @@
 import time
 import xlrd
 import codecs
+import os
 
 import sys
 
@@ -13,6 +14,8 @@ sys.setdefaultencoding('utf-8')
 
 # 处理excel，生成执行语句
 def open_excel(sheetname, src_system):
+    projectpath = "/Users/everywherewego/PycharmProjects";
+    work_book = xlrd.open_workbook(projectpath + "/autoetl_xincheng/00_config/xlsx/src.xlsx")
     # 打开导入配置excel，获取详细导入配置
     sh_cfg = work_book.sheet_by_name(sheetname + src_system)
     nrows_cfg = sh_cfg.nrows
@@ -22,6 +25,7 @@ def open_excel(sheetname, src_system):
         dbfunction = ""
         arguments = ""
         schema = sh_cfg.cell_value(i, 1).lower()
+        # 增全量1为全，0为增加
         if (sh_cfg.cell_value(i, 6) == 1):
             arguments = "(sqoopenv,connect,username,password)"
             # 判断源数据库类型
@@ -56,12 +60,11 @@ def open_excel(sheetname, src_system):
         # 判断字段是否需要特殊处理
         all_fileds = "*"
         if (sh_cfg.cell_value(i, 8).lower() == "y"):
-            all_fileds = get_special_fileds(src_system, sh_cfg.cell_value(i, 2))
-
+            all_fileds = get_special_fileds(work_book, src_system, sh_cfg.cell_value(i, 2))
             print all_fileds
 
-        # 读取增量模板
-        template_file = r"C:\Users\Administrator\Desktop\AutoETL\00_config\template\01_src\src_load_file_incr"
+        # 读取模板
+        template_file = projectpath + "/autoetl_xincheng/00_config/template/01_src/daily/src_load_file_incr"
         with open(template_file, 'r') as f:
             sqoop_template = f.read()
 
@@ -79,11 +82,11 @@ def open_excel(sheetname, src_system):
             load_file = sqoop_cmd.replace("{--driver}\n", "--driver 'net.sourceforge.jtds.jdbc.Driver' \\\n")
         else:
             load_file = sqoop_cmd.replace("{--driver}\n", "")
-        # print load_file
-        record_py_file(src_system, sh_cfg.cell_value(i, 5).lower(), load_file)
+        print load_file
+        # record_py_file(src_system, sh_cfg.cell_value(i, 5).lower(), load_file)
 
 
-def get_special_fileds(src_system, tablename):
+def get_special_fileds(work_book, src_system, tablename):
     cols_info = work_book.sheet_by_name("special_fileds_" + src_system)
     cols_nrows = cols_info.nrows
     fileds = ""
@@ -97,17 +100,14 @@ def get_special_fileds(src_system, tablename):
 
 def record_py_file(dirname, file_name, load_file_str):
     # 指定文件生成路径
-    des_file = r"C:\Users\Administrator\Desktop\GEN\INIT\01SRC\%s\%s_init.py" % (dirname, file_name)
+    des_file = r"/Users/everywherewego/Desktop/GEN/INIT/01SRC/%s/%s_init.py" % (dirname, file_name)
     file_write = codecs.open(des_file, 'w', 'utf-8')
     # print load_file_str
     file_write.writelines(load_file_str)
-
     file_write.close()
 
 
 if __name__ == '__main__':
-    work_book = xlrd.open_workbook(r"C:\Users\Administrator\Desktop\AutoETL\00_config\xlsx\src.xlsx")
-    # all_system = ["my", "sy", "jjr", "ydac"]
-    all_system = ["xcs"]
+    all_system = ["dm"]
     for i in all_system:
         open_excel("load_cfg_", i)
