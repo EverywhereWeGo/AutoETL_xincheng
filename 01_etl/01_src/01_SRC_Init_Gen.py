@@ -94,7 +94,7 @@ def get_special_fileds(work_book, src_system, tablename):
         if (cols_info.cell_value(i, 2).lower() == tablename.lower()):
             fileds = fileds + cols_info.cell_value(i, 3) + ",\n"
     fileds = fileds.rstrip(",\n")
-    # print fileds
+    print fileds
     return fileds
 
 
