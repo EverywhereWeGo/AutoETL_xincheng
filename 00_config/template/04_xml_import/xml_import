@@ -5,10 +5,14 @@
     <type>ideScriptExport</type>
     <time>1557213552937</time>
     <version>V1.0</version>
-    <projectCode>project001</projectCode>
+    <projectCode>{projectCode}</projectCode>
   </head>
   <body>
     <files>
+      <file code="7665ea014f404c649422692b8bb87992" pid_code="" tree_name="01stage" type="1" del="0" includeRootNode="true"/>
+      <file code="7dbca25c92784b90b4c833153ac5f2e0" pid_code="7665ea014f404c649422692b8bb87992" tree_name="02daily" type="1" del="0"/>
+      <file code="8aa215e163f54e1cb9a9d577617fb3cb" pid_code="7665ea014f404c649422692b8bb87992" tree_name="01init" type="1" del="0"/>
+      <file code="7ab713dad2b34de99bfe47e1f28a4ac7" pid_code="8aa215e163f54e1cb9a9d577617fb3cb" tree_name="dm" type="1" del="0"/>
         {0}
     </files>
   </body>
