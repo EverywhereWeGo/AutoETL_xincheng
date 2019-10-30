@@ -1,0 +1,25 @@
+unset HADOOP_PROXY_USER
+export HADOOP_OPTS=" -DHADOOP_USER_NAME=tsga"
+export BDOS_SQOOP_HIVE_IP="bfd1:2181,bfd2:2181,bfd3:2181"
+export BDOS_SQOOP_HIVE_PORT=""
+export BDOS_SQOOP_HIVE_NAMESPACE="stg"
+export BDOS_SQOOP_HIVE_PARAM=";serviceDiscoveryMode=zooKeeper;zooKeeperNamespace=hiveserver2"
+export BDOS_SQOOP_HIVE_USERNAME="tsga"
+export BDOS_SQOOP_HIVE_PWD=""
+
+sqoop import  -D mapreduce.job.queuename=default -D mapreduce.job.name={mapjobname} \
+--connect  'jdbc:dm://10.26.100.211:5236' \
+--username BAIFENDIAN \
+--password 'BAIFENDIAN' \
+--table '{srctablename}' \
+--columns '{columns}' \
+--hive-import  \
+--hive-table {desdatabase}.{destablename} \
+--delete-target-dir  \
+--hive-overwrite  -m 1 \
+--hive-drop-import-delims \
+--null-string '\\N' \
+--null-non-string '\\N' \
+--fetch-size 1000 \
+-- --schema "{schema}" \
+--verbose
